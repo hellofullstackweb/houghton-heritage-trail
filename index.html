@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Houghton-le-Spring Heritage Trail</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Map Container (Always in background) -->
+  <div id="map"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="view-toggle">
+      <button id="btn-map-view" class="active">🗺️ Map</button>
+      <button id="btn-list-view">📋 List</button>
+    </div>
+    <button id="btn-info" class="icon-btn" aria-label="About project">ℹ️</button>
+  </header>
+
+  <!-- Recenter GPS Button -->
+  <button id="btn-recenter" class="fab-recenter" aria-label="Recenter live location">🎯</button>
+
+  <!-- Accessible List View (Hidden by default) -->
+  <main id="list-view" class="list-container hidden">
+    <h2>Houghton Heritage Trail Stops</h2>
+    <div id="stops-list" class="cards-stack"></div>
+  </main>
+
+  <!-- Layer 1: Welcome Overlay -->
+  <section id="welcome-sheet" class="sheet bottom-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-content">
+      <h1>🏛️ Houghton-le-Spring Heritage Trail</h1>
+      <p class="subtitle">Explore 800 years of local history, ancient halls, and mining heritage.</p>
+      
+      <div class="badge-row">
+        <span class="badge">📍 10 Stops</span>
+        <span class="badge">🚶 2.2 km</span>
+        <span class="badge">⏱️ ~45 min</span>
+      </div>
+
+      <button id="btn-start-trail" class="btn-primary">Start Walking Trail</button>
+
+      <footer class="funder-credits">
+        <p>Delivered by <strong>Acumen Community Buildings CIC</strong> in partnership with the <strong>University of Sunderland</strong>, funded by the UK Government through the <strong>UK Shared Prosperity Fund</strong>.</p>
+      </footer>
+    </div>
+  </section>
+
+  <!-- Layer 3: Story Drawer -->
+  <section id="story-drawer" class="sheet bottom-sheet hidden">
+    <div class="sheet-handle"></div>
+    <button id="btn-close-drawer" class="btn-close" aria-label="Close story">✕</button>
+    
+    <div class="sheet-content scrollable">
+      <span id="story-stop-num" class="stop-tag">STOP 1 OF 10</span>
+      <h2 id="story-title">Kepier Hall</h2>
+      <p id="story-era" class="meta-tag">Founded 1574</p>
+      
+      <img id="story-image" src="" alt="Historic landmark view" class="landmark-img">
+
+      <!-- Audio Section -->
+      <div class="audio-box">
+        <div class="audio-header">
+          <span>🎧 Spoken Audio Guide</span>
+          <span id="story-duration" class="audio-duration">1:15</span>
+        </div>
+        <audio id="story-audio" controls preload="none">
+          <source id="audio-source" src="" type="audio/wav">
+          Your browser does not support audio playback.
+        </audio>
+      </div>
+
+      <!-- Description -->
+      <p id="story-description" class="story-text"></p>
+
+      <!-- Action Button -->
+      <button id="btn-next-stop" class="btn-secondary">Next Stop ➔</button>
+    </div>
+  </section>
+
+  <!-- Layer 4: Completion Modal -->
+  <section id="completion-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="celebration-icon">🎉</div>
+      <h2>Trail Completed!</h2>
+      <p>You've explored the historical stops of Houghton-le-Spring.</p>
+      
+      <div class="badge-row summary-box">
+        <span class="badge">🚶 2.2 km</span>
+        <span class="badge">🏛️ Complete</span>
+      </div>
+
+      <p class="community-callout">Visit Kepier Hall or Acumen community spaces for local events, exhibits, and coffee mornings!</p>
+
+      <button id="btn-restart" class="btn-primary">Explore Map Again</button>
+    </div>
+  </section>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Custom Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

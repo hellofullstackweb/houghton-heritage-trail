@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "title": "Kepier Hall",
+    "era": "Founded 1574",
+    "category": "Historic Education & Community",
+    "coords": {
+      "lat": 54.84152,
+      "lng": -1.46851
+    },
+    "description": "Originally founded as the Royal Kepier Grammar School under a charter from Queen Elizabeth I, established by Bernard Gilpin and John Heath. For centuries, it stood as a leading educational institution in County Durham before becoming an integral community church hall.",
+    "image": "assets/image1.jpg",
+    "audio": "assets/audio1.wav",
+    "audioDuration": "1:15"
+  },
+  {
+    "id": 2,
+    "title": "St Michael and All Angels Church",
+    "era": "12th Century",
+    "category": "Ancient Heritage",
+    "coords": {
+      "lat": 54.8421,
+      "lng": -1.4692
+    },
+    "description": "Dating back to Norman times, this parish church has stood at the center of Houghton-le-Spring life for over 800 years. Inside lies the tomb of Bernard Gilpin, famously known as the 'Apostle of the North' for his generosity to the poor.",
+    "image": "assets/image2.jpg",
+    "audio": "assets/audio2.wav",
+    "audioDuration": "0:58"
+  },
+  {
+    "id": 3,
+    "title": "Rectory Park & The Spring",
+    "era": "Historic Grounds",
+    "category": "Community Green Space",
+    "coords": {
+      "lat": 54.8432,
+      "lng": -1.4665
+    },
+    "description": "The historic grounds of the former rectory, home to the natural freshwater spring that gives the town its name. Today, it offers a peaceful nature haven and community walking space connecting the town center to local heritage paths.",
+    "image": "assets/image3.jpg",
+    "audio": "assets/audio3.wav",
+    "audioDuration": "1:05"
+  }
+]
