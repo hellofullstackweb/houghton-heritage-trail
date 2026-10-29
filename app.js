@@ -57,6 +57,15 @@ function renderMarkers() {
 
     markers.push(marker);
   });
+
+  // Automatically adjust zoom and bounds to fit all markers with breathing room
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers);
+    map.fitBounds(group.getBounds(), {
+      padding: [50, 50],       // 50px buffer around pins so they don't touch screen edges
+      maxZoom: 16             // Prevents zooming in too close if pins are near each other
+    });
+  }
 }
 
 // 4. Populate Accessible List View
@@ -122,29 +131,38 @@ function openStoryDrawer(index) {
 function renderGallery(images) {
   const carousel = document.getElementById('gallery-carousel');
   const dotsContainer = document.getElementById('gallery-dots');
+  const prevBtn = document.getElementById('btn-gallery-prev');
+  const nextBtn = document.getElementById('btn-gallery-next');
+
   carousel.innerHTML = '';
   dotsContainer.innerHTML = '';
 
+  const hasMultiple = images.length > 1;
+  prevBtn.classList.toggle('hidden', !hasMultiple);
+  nextBtn.classList.toggle('hidden', !hasMultiple);
+
   images.forEach((imgUrl, i) => {
-    // Add image slide
     const img = document.createElement('img');
     img.src = imgUrl;
     img.className = 'gallery-item';
     img.alt = 'Historic photo';
-    // Tap to open full screen
     img.addEventListener('click', () => openLightbox(imgUrl));
     carousel.appendChild(img);
 
-    // Add indicator dot if more than 1 image
-    if (images.length > 1) {
+    if (hasMultiple) {
       const dot = document.createElement('span');
       dot.className = `dot ${i === 0 ? 'active' : ''}`;
+      dot.addEventListener('click', () => {
+        carousel.scrollTo({
+          left: i * carousel.offsetWidth,
+          behavior: 'smooth'
+        });
+      });
       dotsContainer.appendChild(dot);
     }
   });
 
-  // Track swipe to update dots
-  carousel.addEventListener('scroll', () => {
+  carousel.onscroll = () => {
     const scrollPos = carousel.scrollLeft;
     const width = carousel.offsetWidth;
     const activeIndex = Math.round(scrollPos / width);
@@ -152,7 +170,7 @@ function renderGallery(images) {
     dots.forEach((dot, idx) => {
       dot.classList.toggle('active', idx === activeIndex);
     });
-  });
+  };
 }
 
 // Lightbox Handlers
@@ -230,6 +248,16 @@ function bindUIEvents() {
     } else {
       openStoryDrawer(currentStopIndex + 1);
     }
+  });
+
+  document.getElementById('btn-gallery-prev').addEventListener('click', () => {
+    const carousel = document.getElementById('gallery-carousel');
+    carousel.scrollBy({ left: -carousel.offsetWidth, behavior: 'smooth' });
+  });
+
+  document.getElementById('btn-gallery-next').addEventListener('click', () => {
+    const carousel = document.getElementById('gallery-carousel');
+    carousel.scrollBy({ left: carousel.offsetWidth, behavior: 'smooth' });
   });
 
   document.getElementById('btn-close-lightbox').addEventListener('click', closeLightbox);

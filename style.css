@@ -410,3 +410,87 @@ audio {
   border-radius: 50%;
   cursor: pointer;
 }
+
+/* --- Desktop Carousel Navigation Buttons --- */
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.55);
+  color: #ffffff;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 24px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 5;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.gallery-nav-btn:hover {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+.prev-btn { left: 10px; }
+.next-btn { right: 10px; }
+
+.gallery-nav-btn.hidden {
+  display: none !important;
+}
+
+.gallery-dots .dot {
+  cursor: pointer;
+}
+
+/* --- Responsive Layout for Laptops & Desktops (min-width: 768px) --- */
+@media (min-width: 768px) {
+  /* Center the welcome card instead of stretching it full-width */
+  #welcome-sheet {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    width: 480px;
+    border-radius: var(--radius);
+    bottom: 24px;
+  }
+
+  #welcome-sheet.hidden {
+    transform: translate(-50%, 120%);
+  }
+
+  /* Transform Story Drawer into an elegant left-side panel */
+  #story-drawer {
+    top: 24px;
+    left: 24px;
+    bottom: 24px;
+    right: auto;
+    width: 440px;
+    max-height: calc(100vh - 48px);
+    border-radius: var(--radius);
+    transform: translateX(0);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  #story-drawer.hidden {
+    transform: translateX(-120%);
+  }
+
+  /* Constrain the list view so text doesn't stretch across widescreen */
+  .list-container {
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: var(--radius);
+    top: 80px;
+    bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .gallery-item {
+    height: 250px;
+  }
+}
