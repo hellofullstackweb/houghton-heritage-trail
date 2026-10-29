@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">  <title>Houghton-le-Spring Heritage Trail</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Houghton-le-Spring Heritage Trail</title>
   
   <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
@@ -63,7 +64,7 @@
       <h2 id="story-title">Kepier Hall</h2>
       <p id="story-era" class="meta-tag">Founded 1574</p>
       
-<!-- Gallery Carousel with Desktop Arrow Controls -->
+      <!-- Gallery Carousel with Navigation Controls -->
       <div class="gallery-wrapper">
         <button id="btn-gallery-prev" class="gallery-nav-btn prev-btn" aria-label="Previous photo">‹</button>
         <div id="gallery-carousel" class="gallery-carousel"></div>
@@ -91,6 +92,21 @@
     </div>
   </section>
 
+  <!-- Floating Mini Audio Bar (Appears when drawer is closed while audio is playing) -->
+  <aside id="mini-audio-bar" class="mini-player hidden" aria-label="Now playing audio">
+    <div class="mini-player-info" id="mini-player-expand">
+      <span class="pulse-icon">🔊</span>
+      <div>
+        <p class="mini-title" id="mini-title">Kepier Hall</p>
+        <span class="mini-subtitle">Tap to reopen story</span>
+      </div>
+    </div>
+    <div class="mini-controls">
+      <button id="btn-mini-play" class="mini-btn" aria-label="Play or pause">❚❚</button>
+      <button id="btn-mini-close" class="mini-btn close" aria-label="Stop audio">✕</button>
+    </div>
+  </aside>
+
   <!-- Layer 4: Completion Modal -->
   <section id="completion-modal" class="modal-overlay hidden">
     <div class="modal-card">
@@ -109,31 +125,15 @@
     </div>
   </section>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <!-- Custom Logic -->
-  <script src="app.js"></script>
-
-  <!-- Floating Mini Audio Bar (When drawer is closed while playing) -->
-  <aside id="mini-audio-bar" class="mini-player hidden" aria-label="Now playing audio">
-    <div class="mini-player-info" id="mini-player-expand">
-      <span class="pulse-icon">🔊</span>
-      <div>
-        <p class="mini-title" id="mini-title">Kepier Hall</p>
-        <span class="mini-subtitle">Tap to reopen story</span>
-      </div>
-    </div>
-    <div class="mini-controls">
-      <button id="btn-mini-play" class="mini-btn" aria-label="Play or pause">❚❚</button>
-      <button id="btn-mini-close" class="mini-btn close" aria-label="Stop audio">✕</button>
-    </div>
-  </aside>
-
   <!-- Fullscreen Image Viewer Modal -->
   <div id="image-lightbox" class="lightbox-modal hidden">
     <button id="btn-close-lightbox" class="lightbox-close">✕</button>
     <img id="lightbox-img" src="" alt="Full-screen view">
   </div>
 
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Custom Logic -->
+  <script src="app.js"></script>
 </body>
 </html>

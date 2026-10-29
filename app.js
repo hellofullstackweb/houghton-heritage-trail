@@ -14,17 +14,16 @@ document.addEventListener("DOMContentLoaded", () => {
   initMap();
   loadTrailData();
   bindUIEvents();
-  // Location is NOT called here anymore — user must tap "Start Trail" or "Recenter" first
 });
 
-// 1. Initialize Map with Esri World Street Map (100% Free, No API key needed)
+// 1. Initialize Map with Esri World Street Map (100% Free, reliable tiles)
 function initMap() {
   map = L.map('map', {
     zoomControl: false
   }).setView(HOUGHTON_COORDS, 16);
 
   L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom',
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, TomTom',
     maxZoom: 19
   }).addTo(map);
 }
@@ -41,8 +40,9 @@ async function loadTrailData() {
   }
 }
 
-// 3. Drop Custom Numbered Pins on Map
+// 3. Drop Custom Numbered Pins on Map & Fit All Stops
 function renderMarkers() {
+  markers = [];
   trailData.forEach((stop, index) => {
     const customIcon = L.divIcon({
       className: 'custom-pin',
@@ -58,12 +58,12 @@ function renderMarkers() {
     markers.push(marker);
   });
 
-  // Automatically adjust zoom and bounds to fit all markers with breathing room
+  // Fit all pins onto the screen automatically with padding
   if (markers.length > 0) {
     const group = L.featureGroup(markers);
     map.fitBounds(group.getBounds(), {
-      padding: [50, 50],       // 50px buffer around pins so they don't touch screen edges
-      maxZoom: 16             // Prevents zooming in too close if pins are near each other
+      padding: [50, 50],
+      maxZoom: 16
     });
   }
 }
@@ -96,12 +96,12 @@ function renderListView() {
   });
 }
 
-// Updated openStoryDrawer — hides mini-bar when full drawer is open
+// 5. Drawer & View Navigation
 function openStoryDrawer(index) {
   currentStopIndex = index;
   const stop = trailData[index];
 
-  // Hide floating mini player when drawer is opened
+  // Hide floating mini-bar when full drawer is open
   document.getElementById('mini-audio-bar').classList.add('hidden');
 
   document.getElementById('story-stop-num').innerText = `STOP ${stop.id} OF ${trailData.length}`;
@@ -110,6 +110,7 @@ function openStoryDrawer(index) {
   document.getElementById('story-description').innerText = stop.description;
   document.getElementById('story-duration').innerText = stop.audioDuration;
   
+  // Render Carousel
   renderGallery(stop.images || [stop.image]);
 
   const sourceEl = document.getElementById('audio-source');
@@ -178,7 +179,7 @@ function renderGallery(images) {
   };
 }
 
-// Tap image to toggle 1.8x zoom inspect
+// Lightbox Handlers with Zoom Toggle
 function openLightbox(url) {
   const modal = document.getElementById('image-lightbox');
   const img = document.getElementById('lightbox-img');
@@ -186,7 +187,7 @@ function openLightbox(url) {
   img.classList.remove('zoomed');
   modal.classList.remove('hidden');
 
-  // Double tap or click photo to zoom in/out
+  // Tap or click photo to zoom in/out
   img.onclick = (e) => {
     e.stopPropagation();
     img.classList.toggle('zoomed');
@@ -197,12 +198,11 @@ function closeLightbox() {
   document.getElementById('image-lightbox').classList.add('hidden');
 }
 
-// Updated closeStoryDrawer — does NOT kill audio if it is playing
+// Updated closeStoryDrawer: Keeps audio playing in a floating mini-player
 function closeStoryDrawer() {
   const audioEl = document.getElementById('story-audio');
   const miniBar = document.getElementById('mini-audio-bar');
 
-  // If audio is currently playing, keep it running and display mini-player
   if (!audioEl.paused && audioEl.currentTime > 0 && !audioEl.ended) {
     document.getElementById('mini-title').innerText = trailData[currentStopIndex].title;
     miniBar.classList.remove('hidden');
@@ -242,7 +242,7 @@ function startLocationTracking() {
   );
 }
 
-// Haversine formula
+// Haversine distance formula
 function calculateDistance(lat1, lon1, lat2, lon2) {
   const R = 6371e3;
   const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -256,7 +256,7 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 // 7. Bind Interactive Events
 function bindUIEvents() {
-  // Only request location when user taps "Start Walking Trail"
+  // Start button triggers geolocation
   document.getElementById('btn-start-trail').addEventListener('click', () => {
     document.getElementById('welcome-sheet').classList.add('hidden');
     startLocationTracking();
@@ -273,6 +273,7 @@ function bindUIEvents() {
     }
   });
 
+  // Carousel previous / next arrows (for desktop)
   document.getElementById('btn-gallery-prev').addEventListener('click', () => {
     const carousel = document.getElementById('gallery-carousel');
     carousel.scrollBy({ left: -carousel.offsetWidth, behavior: 'smooth' });
@@ -283,41 +284,17 @@ function bindUIEvents() {
     carousel.scrollBy({ left: carousel.offsetWidth, behavior: 'smooth' });
   });
 
+  // Lightbox close listeners
   document.getElementById('btn-close-lightbox').addEventListener('click', closeLightbox);
-document.getElementById('image-lightbox').addEventListener('click', (e) => {
-  if (e.target.id === 'image-lightbox') closeLightbox();
-});
-
-  document.getElementById('btn-restart').addEventListener('click', () => {
-    document.getElementById('completion-modal').classList.add('hidden');
-    map.setView(HOUGHTON_COORDS, 16);
+  document.getElementById('image-lightbox').addEventListener('click', (e) => {
+    if (e.target.id === 'image-lightbox') closeLightbox();
   });
 
-  document.getElementById('btn-map-view').addEventListener('click', () => switchView('map'));
-  document.getElementById('btn-list-view').addEventListener('click', () => switchView('list'));
-
-  // Request/recenter location when user clicks the target button
-  document.getElementById('btn-recenter').addEventListener('click', () => {
-    if (!isTrackingLocation) {
-      startLocationTracking();
-    }
-    if (userCoords) {
-      map.setView([userCoords.lat, userCoords.lng], 17);
-    } else {
-      map.setView(HOUGHTON_COORDS, 16);
-    }
-  });
-
-  document.getElementById('btn-info').addEventListener('click', () => {
-    document.getElementById('welcome-sheet').classList.remove('hidden');
-  });
-
-  // Mini player tap to reopen full story
+  // Floating Mini-Player Controls
   document.getElementById('mini-player-expand').addEventListener('click', () => {
     openStoryDrawer(currentStopIndex);
   });
 
-  // Mini player play/pause toggle
   document.getElementById('btn-mini-play').addEventListener('click', (e) => {
     e.stopPropagation();
     const audioEl = document.getElementById('story-audio');
@@ -331,7 +308,6 @@ document.getElementById('image-lightbox').addEventListener('click', (e) => {
     }
   });
 
-  // Mini player complete stop
   document.getElementById('btn-mini-close').addEventListener('click', (e) => {
     e.stopPropagation();
     const audioEl = document.getElementById('story-audio');
@@ -340,11 +316,36 @@ document.getElementById('image-lightbox').addEventListener('click', (e) => {
     document.getElementById('mini-audio-bar').classList.add('hidden');
   });
 
-  // Keep mini play button synced when audio ends
   document.getElementById('story-audio').addEventListener('ended', () => {
     document.getElementById('mini-audio-bar').classList.add('hidden');
   });
-  
+
+  // Restart modal button
+  document.getElementById('btn-restart').addEventListener('click', () => {
+    document.getElementById('completion-modal').classList.add('hidden');
+    map.setView(HOUGHTON_COORDS, 16);
+  });
+
+  // Map & List toggles
+  document.getElementById('btn-map-view').addEventListener('click', () => switchView('map'));
+  document.getElementById('btn-list-view').addEventListener('click', () => switchView('list'));
+
+  // Recenter GPS button
+  document.getElementById('btn-recenter').addEventListener('click', () => {
+    if (!isTrackingLocation) {
+      startLocationTracking();
+    }
+    if (userCoords) {
+      map.setView([userCoords.lat, userCoords.lng], 17);
+    } else {
+      map.setView(HOUGHTON_COORDS, 16);
+    }
+  });
+
+  // Info modal opener
+  document.getElementById('btn-info').addEventListener('click', () => {
+    document.getElementById('welcome-sheet').classList.remove('hidden');
+  });
 }
 
 function switchView(view) {
