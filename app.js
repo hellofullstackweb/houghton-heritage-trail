@@ -108,7 +108,6 @@ function openStoryDrawer(index) {
   document.getElementById('story-title').innerText = stop.title;
   document.getElementById('story-era').innerText = `${stop.era} • ${stop.category}`;
   document.getElementById('story-description').innerText = stop.description;
-  document.getElementById('story-duration').innerText = stop.audioDuration;
   
   // Render Carousel
   renderGallery(stop.images || [stop.image]);

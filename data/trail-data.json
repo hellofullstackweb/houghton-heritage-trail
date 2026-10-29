@@ -13,8 +13,7 @@
       "assets/image1.jpg",
       "assets/image2.jpg"
     ],
-    "audio": "assets/audio1.wav",
-    "audioDuration": "1:15"
+    "audio": "assets/audio1.wav"
   },
   {
     "id": 2,
@@ -30,8 +29,7 @@
       "assets/image2.jpg",
       "assets/image3.jpg"
     ],
-    "audio": "assets/audio2.wav",
-    "audioDuration": "0:58"
+    "audio": "assets/audio2.wav"
   },
   {
     "id": 3,
@@ -47,7 +45,6 @@
       "assets/image3.jpg",
       "assets/image1.jpg"
     ],
-    "audio": "assets/audio3.wav",
-    "audioDuration": "1:05"
+    "audio": "assets/audio3.wav"
   }
 ]
