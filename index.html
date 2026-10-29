@@ -64,7 +64,11 @@
       <h2 id="story-title">Kepier Hall</h2>
       <p id="story-era" class="meta-tag">Founded 1574</p>
       
-      <img id="story-image" src="" alt="Historic landmark view" class="landmark-img">
+<!-- Replace the single img tag with this: -->
+      <div class="gallery-wrapper">
+        <div id="gallery-carousel" class="gallery-carousel"></div>
+        <div id="gallery-dots" class="gallery-dots"></div>
+      </div>
 
       <!-- Audio Section -->
       <div class="audio-box">
@@ -108,5 +112,12 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Custom Logic -->
   <script src="app.js"></script>
+
+  <!-- Fullscreen Image Viewer Modal -->
+  <div id="image-lightbox" class="lightbox-modal hidden">
+    <button id="btn-close-lightbox" class="lightbox-close">✕</button>
+    <img id="lightbox-img" src="" alt="Full-screen view">
+  </div>
+  
 </body>
 </html>

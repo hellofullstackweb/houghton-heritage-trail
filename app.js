@@ -98,10 +98,12 @@ function openStoryDrawer(index) {
   document.getElementById('story-stop-num').innerText = `STOP ${stop.id} OF ${trailData.length}`;
   document.getElementById('story-title').innerText = stop.title;
   document.getElementById('story-era').innerText = `${stop.era} • ${stop.category}`;
-  document.getElementById('story-image').src = stop.image;
   document.getElementById('story-description').innerText = stop.description;
   document.getElementById('story-duration').innerText = stop.audioDuration;
   
+  // Render Swipeable Gallery
+  renderGallery(stop.images || [stop.image]);
+
   const sourceEl = document.getElementById('audio-source');
   sourceEl.src = stop.audio;
   audioEl.load();
@@ -115,6 +117,54 @@ function openStoryDrawer(index) {
 
   map.panTo([stop.coords.lat, stop.coords.lng]);
   document.getElementById('story-drawer').classList.remove('hidden');
+}
+
+function renderGallery(images) {
+  const carousel = document.getElementById('gallery-carousel');
+  const dotsContainer = document.getElementById('gallery-dots');
+  carousel.innerHTML = '';
+  dotsContainer.innerHTML = '';
+
+  images.forEach((imgUrl, i) => {
+    // Add image slide
+    const img = document.createElement('img');
+    img.src = imgUrl;
+    img.className = 'gallery-item';
+    img.alt = 'Historic photo';
+    // Tap to open full screen
+    img.addEventListener('click', () => openLightbox(imgUrl));
+    carousel.appendChild(img);
+
+    // Add indicator dot if more than 1 image
+    if (images.length > 1) {
+      const dot = document.createElement('span');
+      dot.className = `dot ${i === 0 ? 'active' : ''}`;
+      dotsContainer.appendChild(dot);
+    }
+  });
+
+  // Track swipe to update dots
+  carousel.addEventListener('scroll', () => {
+    const scrollPos = carousel.scrollLeft;
+    const width = carousel.offsetWidth;
+    const activeIndex = Math.round(scrollPos / width);
+    const dots = dotsContainer.querySelectorAll('.dot');
+    dots.forEach((dot, idx) => {
+      dot.classList.toggle('active', idx === activeIndex);
+    });
+  });
+}
+
+// Lightbox Handlers
+function openLightbox(url) {
+  const modal = document.getElementById('image-lightbox');
+  const img = document.getElementById('lightbox-img');
+  img.src = url;
+  modal.classList.remove('hidden');
+}
+
+function closeLightbox() {
+  document.getElementById('image-lightbox').classList.add('hidden');
 }
 
 function closeStoryDrawer() {
@@ -181,6 +231,11 @@ function bindUIEvents() {
       openStoryDrawer(currentStopIndex + 1);
     }
   });
+
+  document.getElementById('btn-close-lightbox').addEventListener('click', closeLightbox);
+document.getElementById('image-lightbox').addEventListener('click', (e) => {
+  if (e.target.id === 'image-lightbox') closeLightbox();
+});
 
   document.getElementById('btn-restart').addEventListener('click', () => {
     document.getElementById('completion-modal').classList.add('hidden');
