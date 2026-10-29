@@ -96,13 +96,13 @@ function renderListView() {
   });
 }
 
-// 5. Drawer & View Navigation
+// Updated openStoryDrawer — hides mini-bar when full drawer is open
 function openStoryDrawer(index) {
   currentStopIndex = index;
   const stop = trailData[index];
 
-  const audioEl = document.getElementById('story-audio');
-  audioEl.pause();
+  // Hide floating mini player when drawer is opened
+  document.getElementById('mini-audio-bar').classList.add('hidden');
 
   document.getElementById('story-stop-num').innerText = `STOP ${stop.id} OF ${trailData.length}`;
   document.getElementById('story-title').innerText = stop.title;
@@ -110,12 +110,17 @@ function openStoryDrawer(index) {
   document.getElementById('story-description').innerText = stop.description;
   document.getElementById('story-duration').innerText = stop.audioDuration;
   
-  // Render Swipeable Gallery
   renderGallery(stop.images || [stop.image]);
 
   const sourceEl = document.getElementById('audio-source');
-  sourceEl.src = stop.audio;
-  audioEl.load();
+  const audioEl = document.getElementById('story-audio');
+  
+  // Only change audio source if selecting a different stop
+  if (!sourceEl.src.includes(stop.audio)) {
+    audioEl.pause();
+    sourceEl.src = stop.audio;
+    audioEl.load();
+  }
 
   const nextBtn = document.getElementById('btn-next-stop');
   if (index === trailData.length - 1) {
@@ -173,20 +178,38 @@ function renderGallery(images) {
   };
 }
 
-// Lightbox Handlers
+// Tap image to toggle 1.8x zoom inspect
 function openLightbox(url) {
   const modal = document.getElementById('image-lightbox');
   const img = document.getElementById('lightbox-img');
   img.src = url;
+  img.classList.remove('zoomed');
   modal.classList.remove('hidden');
+
+  // Double tap or click photo to zoom in/out
+  img.onclick = (e) => {
+    e.stopPropagation();
+    img.classList.toggle('zoomed');
+  };
 }
 
 function closeLightbox() {
   document.getElementById('image-lightbox').classList.add('hidden');
 }
 
+// Updated closeStoryDrawer — does NOT kill audio if it is playing
 function closeStoryDrawer() {
-  document.getElementById('story-audio').pause();
+  const audioEl = document.getElementById('story-audio');
+  const miniBar = document.getElementById('mini-audio-bar');
+
+  // If audio is currently playing, keep it running and display mini-player
+  if (!audioEl.paused && audioEl.currentTime > 0 && !audioEl.ended) {
+    document.getElementById('mini-title').innerText = trailData[currentStopIndex].title;
+    miniBar.classList.remove('hidden');
+  } else {
+    miniBar.classList.add('hidden');
+  }
+
   document.getElementById('story-drawer').classList.add('hidden');
 }
 
@@ -288,6 +311,40 @@ document.getElementById('image-lightbox').addEventListener('click', (e) => {
   document.getElementById('btn-info').addEventListener('click', () => {
     document.getElementById('welcome-sheet').classList.remove('hidden');
   });
+
+  // Mini player tap to reopen full story
+  document.getElementById('mini-player-expand').addEventListener('click', () => {
+    openStoryDrawer(currentStopIndex);
+  });
+
+  // Mini player play/pause toggle
+  document.getElementById('btn-mini-play').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const audioEl = document.getElementById('story-audio');
+    const playBtn = document.getElementById('btn-mini-play');
+    if (audioEl.paused) {
+      audioEl.play();
+      playBtn.innerText = "❚❚";
+    } else {
+      audioEl.pause();
+      playBtn.innerText = "▶";
+    }
+  });
+
+  // Mini player complete stop
+  document.getElementById('btn-mini-close').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const audioEl = document.getElementById('story-audio');
+    audioEl.pause();
+    audioEl.currentTime = 0;
+    document.getElementById('mini-audio-bar').classList.add('hidden');
+  });
+
+  // Keep mini play button synced when audio ends
+  document.getElementById('story-audio').addEventListener('ended', () => {
+    document.getElementById('mini-audio-bar').classList.add('hidden');
+  });
+  
 }
 
 function switchView(view) {
