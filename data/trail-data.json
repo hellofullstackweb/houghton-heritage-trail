@@ -1,27 +1,77 @@
 [
   {
     "id": 1,
-    "title": "The Villa",
-    "era": "19th Century",
-    "category": "Victorian Architecture",
-    "coords": {
-      "lat": 54.8428,
-      "lng": -1.4712
+    "title": "Robinson's Brewery",
+    "era": "18th – 20th Century",
+    "category": "Industrial & Brewing Heritage",
+    "coords": { "lat": 54.8422, "lng": -1.4672 },
+    "puzzle": {
+      "type": "jigsaw",
+      "prompt": "“A torn label lies before you, its message incomplete. Tap two tiles to swap them and piece together the old Robinson Bros label!”",
+      "image": "assets/robinson-label.png"
     },
-    "description": "A handsome 19th-century stone residence situated near the Rectory grounds. Built during Houghton-le-Spring's Victorian expansion, it reflects the prosperous residential character of the town during the height of its local coal-mining and brewing eras.",
+    "description": "Ah, the craft of brewing! Thanks to Houghton's pure local spring water, Robinson Bros. Brewers Ltd operated here on a grand scale, producing famous Houghton Ales that supplied pubs across County Durham and Sunderland.",
+    "images": [
+      "assets/robinson-label.png",
+      "assets/robinson-brewery.jpg",
+      "assets/robinson-medallions.png"
+    ],
+    "audio": "assets/audio1.wav"
+  },
+  {
+    "id": 2,
+    "title": "St Michael & All Angels Church",
+    "era": "12th Century",
+    "category": "Grade I Listed Parish Church",
+    "coords": { "lat": 54.8421, "lng": -1.4692 },
+    "puzzle": {
+      "type": "choice",
+      "prompt": "“My remains lie resting in a simple altar tomb in the south transept. Examine this stained-glass window—what symbol is on the banner held by the central risen figure?”",
+      "image": "assets/church-window.jpg",
+      "options": [
+        "A Red Cross on a White Banner",
+        "A Golden Crown & Anchor",
+        "Three Blue Lions"
+      ],
+      "correctIndex": 0
+    },
+    "description": "Dating back to Norman times, this cruciform parish church has stood at the centre of Houghton-le-Spring life for over 800 years. Inside lies the ornate 16th-century tomb of Bernard Gilpin, known as the 'Apostle of the North'.",
+    "images": [
+      "assets/church-window.jpg",
+      "assets/image2.jpg"
+    ],
+    "audio": "assets/audio2.wav"
+  },
+  {
+    "id": 3,
+    "title": "Kepier Hall",
+    "era": "Founded 1574",
+    "category": "Historic Education & Community",
+    "coords": { "lat": 54.8415, "lng": -1.4685 },
+    "puzzle": {
+      "type": "timeline",
+      "prompt": "“History is a puzzle, and the milestones of my school have fallen out of order. Use the ↑ ↓ arrows to arrange these events from earliest to latest!”",
+      "events": [
+        { "year": 1574, "text": "1574 — Royal Charter granted by Queen Elizabeth I" },
+        { "year": 1584, "text": "1584 — Bernard Gilpin passes away in Houghton" },
+        { "year": 2024, "text": "Today — Reborn as a community hub with Acumen CIC" }
+      ]
+    },
+    "description": "Founded under a Royal Charter from Queen Elizabeth I by Bernard Gilpin and John Heath as the Royal Kepier Grammar School. For centuries it educated generations of scholars before becoming a vibrant community hub.",
     "images": [
       "assets/image1.jpg"
     ],
     "audio": "assets/audio1.wav"
   },
   {
-    "id": 2,
-    "title": "The Rectory & Rectory Park",
+    "id": 4,
+    "title": "The Old Rectory & Park",
     "era": "Medieval – 1960s",
     "category": "Historic Grounds & Spring",
-    "coords": {
-      "lat": 54.8434,
-      "lng": -1.4705
+    "coords": { "lat": 54.8434, "lng": -1.4705 },
+    "puzzle": {
+      "type": "photo",
+      "prompt": "“This was my home and a place of refuge for the hungry and poor. Search the historic walls and stonework here—snap a photo of a historic plaque, mark, or stone carving to unlock the story!”"
     },
     "description": "The historic grounds of the former Rector's residence, home to the natural freshwater spring that gives Houghton-le-Spring its name. Famous for the hospitality of Bernard Gilpin, who fed villagers and travellers here every Sunday.",
     "images": [
@@ -30,29 +80,46 @@
     "audio": "assets/audio3.wav"
   },
   {
-    "id": 3,
+    "id": 5,
+    "title": "The Almshouses",
+    "era": "1660s",
+    "category": "Charitable Heritage",
+    "coords": { "lat": 54.8413, "lng": -1.4683 },
+    "puzzle": {
+      "type": "choice",
+      "prompt": "“Charity was the very foundation of a just life. Look at the historic stone almshouses beside Kepier Hall—how many gables face the street in this photograph?”",
+      "image": "assets/almshouses.jpg",
+      "options": [
+        "Two stone gables",
+        "Four brick towers",
+        "One circular dome"
+      ],
+      "correctIndex": 0
+    },
+    "description": "Endowed in the 1660s by George Lilburne and George Davenport immediately adjacent to Kepier Hall, these historic stone almshouses provided free shelter and support for six poor, elderly residents of the parish.",
+    "images": [
+      "assets/almshouses.jpg"
+    ],
+    "audio": "assets/audio2.wav"
+  },
+  {
+    "id": 6,
     "title": "South Wall – Bee Boles",
     "era": "17th – 18th Century",
-    "category": "Agricultural & Garden Heritage",
-    "coords": {
-      "lat": 54.8426,
-      "lng": -1.4701
-    },
-    "description": "Small, square-headed stone recesses built into the historic southern boundary wall of the old Rectory garden. These bee boles sheltered woven straw beehives (skeps) from northern winds while catching the sun's warmth to produce honey and church candle wax.",
+    "category": "Garden Heritage",
+    "coords": { "lat": 54.8426, "lng": -1.4701 },
+    "description": "Small, square-headed stone recesses built into the historic southern boundary wall of the old Rectory garden. These bee boles sheltered woven straw beehives (skeps) from northern winds while catching the sun's warmth.",
     "images": [
       "assets/image2.jpg"
     ],
     "audio": "assets/audio2.wav"
   },
   {
-    "id": 4,
+    "id": 7,
     "title": "The Stone Arch",
     "era": "Historic Estate Entrance",
     "category": "Architectural Landmark",
-    "coords": {
-      "lat": 54.8424,
-      "lng": -1.4696
-    },
+    "coords": { "lat": 54.8424, "lng": -1.4696 },
     "description": "A surviving historic stone archway marking the gateway into the former Rectory grounds. It stands as a physical boundary between the bustling church and market area and the peaceful ecclesiastical estate.",
     "images": [
       "assets/image1.jpg"
@@ -60,75 +127,34 @@
     "audio": "assets/audio1.wav"
   },
   {
-    "id": 5,
-    "title": "St Michael and All Angels Church",
-    "era": "12th Century",
-    "category": "Grade I Listed Parish Church",
-    "coords": {
-      "lat": 54.8421,
-      "lng": -1.4692
-    },
-    "description": "Dating back to Norman times, this cruciform parish church has stood at the centre of Houghton-le-Spring life for over 800 years. Inside lies the ornate 16th-century tomb of Bernard Gilpin, known as the 'Apostle of the North'.",
-    "images": [
-      "assets/image2.jpg"
-    ],
-    "audio": "assets/audio2.wav"
-  },
-  {
-    "id": 6,
-    "title": "Kepier Hall",
-    "era": "Founded 1574",
-    "category": "Historic Education & Community",
-    "coords": {
-      "lat": 54.8415,
-      "lng": -1.4685
-    },
-    "description": "Founded under a Royal Charter from Queen Elizabeth I by Bernard Gilpin and John Heath as the Royal Kepier Grammar School. For centuries it educated generations of scholars before becoming a vibrant community hub managed by Acumen Community Buildings CIC.",
+    "id": 8,
+    "title": "The Villa",
+    "era": "19th Century",
+    "category": "Victorian Architecture",
+    "coords": { "lat": 54.8428, "lng": -1.4712 },
+    "description": "A handsome 19th-century stone residence situated near the Rectory grounds. Built during Houghton-le-Spring's Victorian expansion, it reflects the prosperous residential character of the town.",
     "images": [
       "assets/image1.jpg"
     ],
     "audio": "assets/audio1.wav"
   },
   {
-    "id": 7,
-    "title": "The Almshouses",
-    "era": "1660s",
-    "category": "Charitable Heritage",
-    "coords": {
-      "lat": 54.8413,
-      "lng": -1.4683
-    },
-    "description": "Endowed in the 1660s by George Lilburne and George Davenport immediately adjacent to Kepier Hall, these historic stone almshouses provided free shelter and support for six poor, elderly residents of the parish.",
-    "images": [
-      "assets/image2.jpg"
-    ],
-    "audio": "assets/audio2.wav"
-  },
-  {
-    "id": 8,
-    "title": "Houghton Brewery",
-    "era": "18th – 20th Century",
-    "category": "Industrial & Brewing Heritage",
-    "coords": {
-      "lat": 54.8422,
-      "lng": -1.4672
-    },
-    "description": "Fed by Houghton's pure local spring water, brewing was a major industry in the town. Robinson Bros. Brewers Ltd operated here on a large scale, producing famous Houghton Ales that supplied pubs across County Durham and Sunderland.",
-    "images": [
-      "assets/image3.jpg"
-    ],
-    "audio": "assets/audio3.wav"
-  },
-  {
     "id": 9,
     "title": "Houghton Hall",
     "era": "c. 1600 – 1620",
     "category": "Grade I Listed Jacobean Mansion",
-    "coords": {
-      "lat": 54.8430,
-      "lng": -1.4660
+    "coords": { "lat": 54.8430, "lng": -1.4660 },
+    "puzzle": {
+      "type": "choice",
+      "prompt": "“Examine this grand early 17th-century mansion. Who built Houghton Hall around 1600–1620?”",
+      "options": [
+        "Robert Hutton (nephew of the Archbishop of York)",
+        "King Henry VIII",
+        "George Stephenson"
+      ],
+      "correctIndex": 0
     },
-    "description": "Built in the early 17th century by Robert Hutton, nephew of the Archbishop of York. With its symmetrical stone facade, mullioned windows, and Dutch-style gables, it is one of the finest surviving Jacobean manor houses in North East England.",
+    "description": "Built in the early 17th century by Robert Hutton, nephew of Matthew Hutton, Archbishop of York. With its symmetrical stone facade, mullioned windows, and Dutch-style gables, it is one of the finest surviving Jacobean manor houses in North East England.",
     "images": [
       "assets/image1.jpg"
     ],
@@ -139,10 +165,7 @@
     "title": "Nesham Place",
     "era": "18th – 19th Century",
     "category": "Historic Conservation Street",
-    "coords": {
-      "lat": 54.8425,
-      "lng": -1.4665
-    },
+    "coords": { "lat": 54.8425, "lng": -1.4665 },
     "description": "Named after the prominent local Nesham family, this historic street features 18th- and 19th-century stone townhouses and cottages that formed the residential and social heart of old Houghton-le-Spring.",
     "images": [
       "assets/image3.jpg"
