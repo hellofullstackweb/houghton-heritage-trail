@@ -9,6 +9,14 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- PWA & Mobile Web App Settings -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0a4d68">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Houghton Trail">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
 </head>
 <body>
 
@@ -33,24 +41,32 @@
     <div id="stops-list" class="cards-stack"></div>
   </main>
 
-  <!-- Layer 1: Welcome Overlay -->
+  <!-- Layer 1: Welcome Overlay (Collapsible) -->
   <section id="welcome-sheet" class="sheet bottom-sheet">
-    <div class="sheet-handle"></div>
+    <div id="welcome-handle" class="sheet-handle-bar" role="button" tabindex="0" aria-label="Toggle welcome card">
+      <div class="sheet-handle"></div>
+    </div>
     <div class="sheet-content">
-      <h1>🏛️ Houghton-le-Spring Heritage Trail</h1>
-      <p class="subtitle">Explore 800 years of local history, ancient halls, and mining heritage.</p>
-      
-      <div class="badge-row">
-        <span class="badge">📍 10 Stops</span>
-        <span class="badge">🚶 2.2 km</span>
-        <span class="badge">⏱️ ~45 min</span>
+      <div class="welcome-header-row" id="welcome-header-toggle">
+        <h1>🏛️ Houghton-le-Spring Heritage Trail</h1>
+        <span id="welcome-toggle-icon" class="toggle-chevron">▼</span>
       </div>
+      
+      <div id="welcome-collapsible-body">
+        <p class="subtitle">Explore 800 years of local history, ancient halls, and mining heritage.</p>
+        
+        <div class="badge-row">
+          <span class="badge">📍 10 Mystery Stops</span>
+          <span class="badge">🚶 ~1.4 km</span>
+          <span class="badge">⏱️ ~40 min</span>
+        </div>
 
-      <button id="btn-start-trail" class="btn-primary">Start Walking Trail</button>
+        <button id="btn-start-trail" class="btn-primary">Start Walking Trail</button>
 
-      <footer class="funder-credits">
-        <p>Delivered by <strong>Acumen Community Buildings CIC</strong> in partnership with the <strong>University of Sunderland</strong>, funded by the UK Government through the <strong>UK Shared Prosperity Fund</strong>.</p>
-      </footer>
+        <footer class="funder-credits">
+          <p>Delivered by <strong>Acumen Community Buildings CIC</strong> in partnership with the <strong>University of Sunderland</strong>, funded by the UK Government through the <strong>UK Shared Prosperity Fund</strong>.</p>
+        </footer>
+      </div>
     </div>
   </section>
 
@@ -60,7 +76,7 @@
     <button id="btn-close-drawer" class="btn-close" aria-label="Close story">✕</button>
     
     <div class="sheet-content scrollable">
-      <span id="story-stop-num" class="stop-tag">STOP 1 OF 10</span>
+      <span id="story-stop-num" class="stop-tag">MYSTERY LOCATION</span>
       <h2 id="story-title">Kepier Hall</h2>
       <p id="story-era" class="meta-tag">Founded 1574</p>
       
@@ -87,7 +103,7 @@
       <p id="story-description" class="story-text"></p>
 
       <!-- Action Button -->
-      <button id="btn-next-stop" class="btn-secondary">Next Stop ➔</button>
+      <button id="btn-next-stop" class="btn-secondary">Next Mystery Stop ➔</button>
     </div>
   </section>
 
@@ -111,10 +127,10 @@
     <div class="modal-card">
       <div class="celebration-icon">🎉</div>
       <h2>Trail Completed!</h2>
-      <p>You've explored the historical stops of Houghton-le-Spring.</p>
+      <p>You've explored the historical mystery stops of Houghton-le-Spring.</p>
       
       <div class="badge-row summary-box">
-        <span class="badge">🚶 2.2 km</span>
+        <span class="badge">🚶 ~1.4 km</span>
         <span class="badge">🏛️ Complete</span>
       </div>
 
