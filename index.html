@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <!-- Map Container (Always in background) -->
+  <!-- Map Container -->
   <div id="map"></div>
 
   <!-- Top Navigation Bar -->
@@ -35,7 +35,7 @@
   <!-- Recenter GPS Button -->
   <button id="btn-recenter" class="fab-recenter" aria-label="Recenter live location">🎯</button>
 
-  <!-- Accessible List View (Hidden by default) -->
+  <!-- Accessible List View -->
   <main id="list-view" class="list-container hidden">
     <h2>Houghton Heritage Trail Stops</h2>
     <div id="stops-list" class="cards-stack"></div>
@@ -53,7 +53,7 @@
       </div>
       
       <div id="welcome-collapsible-body">
-        <p class="subtitle">Explore 800 years of local history, ancient halls, and mining heritage.</p>
+        <p class="subtitle">Explore 800 years of local history, ancient halls, and mining heritage. Solve the mystery challenge at each stop to unlock its story!</p>
         
         <div class="badge-row">
           <span class="badge">📍 10 Mystery Stops</span>
@@ -70,7 +70,7 @@
     </div>
   </section>
 
-  <!-- Layer 3: Story Drawer -->
+  <!-- Layer 3: Story & Puzzle Drawer -->
   <section id="story-drawer" class="sheet bottom-sheet hidden">
     <div class="sheet-handle"></div>
     <button id="btn-close-drawer" class="btn-close" aria-label="Close story">✕</button>
@@ -79,35 +79,50 @@
       <span id="story-stop-num" class="stop-tag">MYSTERY LOCATION</span>
       <h2 id="story-title">Kepier Hall</h2>
       <p id="story-era" class="meta-tag">Founded 1574</p>
-      
-      <!-- Gallery Carousel with Navigation Controls -->
-      <div class="gallery-wrapper">
-        <button id="btn-gallery-prev" class="gallery-nav-btn prev-btn" aria-label="Previous photo">‹</button>
-        <div id="gallery-carousel" class="gallery-carousel"></div>
-        <button id="btn-gallery-next" class="gallery-nav-btn next-btn" aria-label="Next photo">›</button>
-        <div id="gallery-dots" class="gallery-dots"></div>
+
+      <!-- INTERACTIVE PUZZLE GATE -->
+      <div id="puzzle-gate" class="puzzle-box hidden">
+        <div class="puzzle-badge">🧩 MYSTERY CHALLENGE</div>
+        <p id="puzzle-prompt" class="puzzle-prompt"></p>
+        
+        <!-- Dynamic Puzzle Workspace (Jigsaw / Choice / Timeline / Camera) -->
+        <div id="puzzle-workspace" class="puzzle-workspace"></div>
+        
+        <p id="puzzle-feedback" class="puzzle-feedback hidden"></p>
+        <button id="btn-skip-puzzle" class="btn-link-subtle">Skip puzzle & reveal history ➔</button>
       </div>
 
-      <!-- Audio Section -->
-      <div class="audio-box">
-        <div class="audio-header">
-          <span>🎧 Spoken Audio Guide</span>
+      <!-- UNLOCKED CONTENT -->
+      <div id="unlocked-story-content">
+        <!-- Gallery Carousel -->
+        <div class="gallery-wrapper">
+          <button id="btn-gallery-prev" class="gallery-nav-btn prev-btn" aria-label="Previous photo">‹</button>
+          <div id="gallery-carousel" class="gallery-carousel"></div>
+          <button id="btn-gallery-next" class="gallery-nav-btn next-btn" aria-label="Next photo">›</button>
+          <div id="gallery-dots" class="gallery-dots"></div>
         </div>
-        <audio id="story-audio" controls preload="none">
-          <source id="audio-source" src="" type="audio/wav">
-          Your browser does not support audio playback.
-        </audio>
+
+        <!-- Audio Section -->
+        <div class="audio-box">
+          <div class="audio-header">
+            <span>🎧 Spoken Audio Guide</span>
+          </div>
+          <audio id="story-audio" controls preload="none">
+            <source id="audio-source" src="" type="audio/wav">
+            Your browser does not support audio playback.
+          </audio>
+        </div>
+
+        <!-- Description -->
+        <p id="story-description" class="story-text"></p>
+
+        <!-- Action Button -->
+        <button id="btn-next-stop" class="btn-secondary">Next Mystery Stop ➔</button>
       </div>
-
-      <!-- Description -->
-      <p id="story-description" class="story-text"></p>
-
-      <!-- Action Button -->
-      <button id="btn-next-stop" class="btn-secondary">Next Mystery Stop ➔</button>
     </div>
   </section>
 
-  <!-- Floating Mini Audio Bar (Appears when drawer is closed while audio is playing) -->
+  <!-- Floating Mini Audio Bar -->
   <aside id="mini-audio-bar" class="mini-player hidden" aria-label="Now playing audio">
     <div class="mini-player-info" id="mini-player-expand">
       <span class="pulse-icon">🔊</span>
