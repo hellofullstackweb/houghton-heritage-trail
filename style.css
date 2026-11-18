@@ -1,630 +1,171 @@
-:root {
-  --primary: #0a4d68;
-  --primary-hover: #083c52;
-  --accent: #f39c12;
-  --bg-surface: #ffffff;
-  --text-dark: #1f2937;
-  --text-muted: #4b5563;
-  --radius: 18px;
+/* --- Interactive Puzzle Box inside Story Drawer --- */
+.puzzle-box {
+  background: #fffbeb;
+  border: 1.5px solid #fcd34d;
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
-  -webkit-tap-highlight-color: transparent;
+.puzzle-badge {
+  display: inline-block;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  letter-spacing: 0.4px;
 }
 
-body, html {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background-color: #f3f4f6;
-  color: var(--text-dark);
-}
-
-/* Map Screen */
-#map {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-/* Top Navigation Bar */
-.top-nav {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  right: 16px;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  pointer-events: none;
-}
-
-.view-toggle {
-  display: flex;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 4px;
-  border-radius: 30px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-  pointer-events: auto;
-}
-
-.view-toggle button {
-  border: none;
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 20px;
+.puzzle-prompt {
   font-size: 14px;
-  font-weight: 600;
+  line-height: 1.5;
+  color: #1f2937;
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+
+.puzzle-workspace {
+  margin-bottom: 12px;
+}
+
+/* 1. Tile-Swap Jigsaw Grid (3x3) */
+.jigsaw-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  width: 100%;
+  max-width: 280px;
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  background: #1f2937;
+  padding: 3px;
+  border-radius: 10px;
+}
+
+.jigsaw-tile {
+  width: 100%;
+  height: 100%;
+  background-size: 300% 300%;
+  border-radius: 4px;
   cursor: pointer;
-  color: var(--text-dark);
+  transition: transform 0.15s, box-shadow 0.15s;
 }
 
-.view-toggle button.active {
-  background: var(--primary);
-  color: #fff;
+.jigsaw-tile.selected {
+  outline: 3px solid #f59e0b;
+  transform: scale(0.94);
+  z-index: 2;
 }
 
-.icon-btn {
-  pointer-events: auto;
-  border: none;
-  background: rgba(255, 255, 255, 0.95);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-  cursor: pointer;
-  font-size: 18px;
+/* 2. Stained Glass / Visual Choice Buttons */
+.puzzle-ref-img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
 }
 
-/* Recenter Floating Button (sits cleanly above minimized welcome bar) */
-.fab-recenter {
-  position: absolute;
-  bottom: 85px;
-  right: 16px;
-  z-index: 9;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: #ffffff;
-  border: none;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-  font-size: 22px;
-  cursor: pointer;
-}
-
-/* Sliding Bottom Sheets */
-.sheet {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--bg-surface);
-  border-radius: var(--radius) var(--radius) 0 0;
-  box-shadow: 0 -6px 25px rgba(0,0,0,0.2);
-  z-index: 20;
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  max-height: 85vh;
+.choice-stack {
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
-.sheet.hidden {
-  transform: translateY(110%);
-}
-
-.sheet-handle {
-  width: 44px;
-  height: 5px;
-  background: #d1d5db;
-  border-radius: 3px;
-  margin: 0 auto;
-}
-
-.sheet-handle-bar {
-  padding: 12px 0 6px;
-  cursor: pointer;
-}
-
-.sheet-content {
-  padding: 10px 22px 28px;
-}
-
-.sheet-content.scrollable {
-  overflow-y: auto;
-}
-
-/* Collapsible Welcome Card */
-.welcome-header-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-}
-
-.welcome-header-row h1 {
-  margin-bottom: 0;
-  font-size: 19px;
-}
-
-.toggle-chevron {
+.choice-btn {
+  width: 100%;
+  text-align: left;
+  padding: 12px 14px;
+  background: #ffffff;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
   font-size: 14px;
-  color: var(--text-muted);
-  transition: transform 0.25s ease;
-  padding: 4px 8px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-#welcome-collapsible-body {
-  margin-top: 10px;
+.choice-btn:hover {
+  border-color: var(--primary);
+  background: #f0f9ff;
 }
 
-#welcome-sheet.minimized #welcome-collapsible-body {
-  display: none;
+/* 3. Timeline Sorter */
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
 }
 
-#welcome-sheet.minimized .sheet-content {
-  padding: 6px 20px 14px;
+.timeline-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  gap: 8px;
 }
 
-#welcome-sheet.minimized .toggle-chevron {
-  transform: rotate(180deg);
+.timeline-arrows {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.btn-close {
-  position: absolute;
-  top: 14px;
-  right: 16px;
+.timeline-arrows button {
   background: #e5e7eb;
   border: none;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-/* Typography & Badges */
-h1 { font-size: 21px; margin-bottom: 6px; }
-h2 { font-size: 20px; margin-bottom: 4px; }
-.subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4; }
-.meta-tag { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
-.stop-tag { font-size: 12px; font-weight: 700; color: #dc2626; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
-
-.badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.badge {
-  background: #e0f2fe;
-  color: var(--primary);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 6px 10px;
-  border-radius: 8px;
-}
-
-/* Primary Action Buttons */
-.btn-primary, .btn-secondary {
-  width: 100%;
-  padding: 15px;
-  border: none;
-  border-radius: 14px;
-  font-size: 16px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-}
-.btn-primary:active { background: var(--primary-hover); }
-
-.btn-secondary {
-  background: #f3f4f6;
-  color: var(--text-dark);
-  margin-top: 16px;
-}
-
-/* Audio Section */
-.audio-box {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 14px;
-}
-
-.audio-header {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  font-weight: 600;
-  margin-bottom: 8px;
-  color: var(--text-muted);
-}
-
-audio {
-  width: 100%;
-  height: 40px;
-}
-
-.story-text {
-  font-size: 15px;
-  line-height: 1.6;
-  color: #374151;
-}
-
-/* Funder Disclaimer */
-.funder-credits {
-  margin-top: 18px;
-  padding-top: 14px;
-  border-top: 1px solid #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 7px;
   font-size: 11px;
-  color: #6b7280;
-  line-height: 1.4;
-}
-
-/* Accessible List View */
-.list-container {
-  position: absolute;
-  top: 70px;
-  bottom: 64px;
-  left: 0;
-  right: 0;
-  background: #f9fafb;
-  z-index: 5;
-  padding: 16px;
-  overflow-y: auto;
-}
-
-.cards-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.list-card {
-  background: #ffffff;
-  padding: 14px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   cursor: pointer;
 }
 
-.list-card h3 { font-size: 16px; margin-bottom: 4px; }
-.list-card p { font-size: 13px; color: var(--text-muted); }
-.list-card .distance { font-size: 12px; font-weight: 700; color: var(--primary); }
-
-/* Classic Red Map Teardrop Pin for Mystery Stops */
-.custom-pin {
-  background: #dc2626;
-  color: #ffffff;
-  border: 2.5px solid #ffffff;
-  border-radius: 50% 50% 50% 0;
-  transform: rotate(-45deg);
-  width: 34px;
-  height: 34px;
+/* 4. Camera Photo Challenge */
+.camera-upload-label {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.custom-pin span {
-  transform: rotate(45deg);
-  font-weight: 800;
-  font-size: 15px;
-  line-height: 1;
-}
-
-/* Turns green once the walker has discovered that stop */
-.custom-pin.discovered {
-  background: #16a34a;
-}
-
-.user-gps-dot {
-  width: 16px;
-  height: 16px;
-  background: #2563eb;
-  border: 3px solid #ffffff;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(37,99,235,0.7);
-}
-
-/* Completion Modal */
-.modal-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
-  z-index: 50;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-
-.modal-card {
-  background: #fff;
-  border-radius: 20px;
-  padding: 24px;
-  text-align: center;
-  max-width: 340px;
-}
-
-.celebration-icon { font-size: 42px; margin-bottom: 10px; }
-.community-callout { font-size: 13px; color: var(--text-muted); margin: 16px 0; }
-.hidden { display: none !important; }
-
-/* --- Gallery Carousel --- */
-.gallery-wrapper {
-  position: relative;
-  margin-bottom: 14px;
-}
-
-.gallery-carousel {
-  display: flex;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  gap: 10px;
-  border-radius: 12px;
-  scrollbar-width: none;
-}
-
-.gallery-carousel::-webkit-scrollbar {
-  display: none;
-}
-
-.gallery-item {
-  flex: 0 0 100%;
+  gap: 8px;
   width: 100%;
-  height: 200px;
-  object-fit: cover;
+  padding: 14px;
+  background: var(--primary);
+  color: #ffffff;
   border-radius: 12px;
-  scroll-snap-align: start;
-  cursor: zoom-in;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
 }
 
-.gallery-dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
+.puzzle-feedback {
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: 8px;
   margin-top: 8px;
 }
 
-.dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #d1d5db;
-  transition: all 0.2s;
-  cursor: pointer;
+.puzzle-feedback.error {
+  background: #fee2e2;
+  color: #b91c1c;
 }
 
-.dot.active {
-  background: var(--primary);
-  width: 16px;
-  border-radius: 4px;
-}
-
-/* Desktop Arrow Navigation (Hidden on mobile phones) */
-.gallery-nav-btn {
-  display: none;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.55);
-  color: #ffffff;
-  border: none;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  font-size: 24px;
-  line-height: 1;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 5;
-  transition: background 0.2s;
-}
-
-.gallery-nav-btn:hover {
-  background: rgba(0, 0, 0, 0.85);
-}
-
-.prev-btn { left: 10px; }
-.next-btn { right: 10px; }
-
-/* --- Fullscreen Lightbox & Sizing Fix --- */
-.lightbox-modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-  overflow: auto;
-}
-
-.lightbox-modal img {
-  width: 92vw;
-  max-width: 900px;
-  height: auto;
-  max-height: 80vh;
-  object-fit: contain;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  transition: transform 0.25s ease;
-  cursor: zoom-in;
-}
-
-.lightbox-modal img.zoomed {
-  transform: scale(1.8);
-  cursor: zoom-out;
-}
-
-.lightbox-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
-  border: none;
-  font-size: 24px;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-/* --- Floating Mini Audio Player on Map --- */
-.mini-player {
-  position: absolute;
-  bottom: 76px;
-  left: 16px;
-  right: 16px;
-  background: #0a4d68;
-  color: #ffffff;
-  border-radius: 14px;
-  padding: 10px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  z-index: 15;
-  animation: slideUpMini 0.3s ease;
-}
-
-@keyframes slideUpMini {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-.mini-player-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  flex: 1;
-}
-
-.pulse-icon {
-  font-size: 20px;
-  animation: pulseAudio 1.5s infinite;
-}
-
-@keyframes pulseAudio {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
-.mini-title {
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.mini-subtitle {
-  font-size: 11px;
-  color: #cbd5e1;
-}
-
-.mini-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.mini-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: none;
-  color: #fff;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.mini-btn.close {
+.btn-link-subtle {
+  display: block;
+  width: 100%;
   background: transparent;
-  font-size: 16px;
-}
-
-/* --- Responsive Tablet / Desktop Styling (min-width: 768px) --- */
-@media (min-width: 768px) {
-  .gallery-nav-btn {
-    display: flex;
-  }
-
-  #welcome-sheet {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
-    width: 480px;
-    border-radius: var(--radius);
-    bottom: 24px;
-  }
-
-  #welcome-sheet.hidden {
-    transform: translate(-50%, 120%);
-  }
-
-  #story-drawer {
-    top: 24px;
-    left: 24px;
-    bottom: 24px;
-    right: auto;
-    width: 440px;
-    max-height: calc(100vh - 48px);
-    border-radius: var(--radius);
-    transform: translateX(0);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  }
-
-  #story-drawer.hidden {
-    transform: translateX(-120%);
-  }
-
-  .list-container {
-    max-width: 600px;
-    margin: 0 auto;
-    border-radius: var(--radius);
-    top: 80px;
-    bottom: 90px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  }
-
-  .gallery-item {
-    height: 250px;
-  }
-
-  .mini-player {
-    left: auto;
-    right: 24px;
-    bottom: 24px;
-    width: 360px;
-  }
+  border: none;
+  color: #6b7280;
+  font-size: 12px;
+  text-decoration: underline;
+  margin-top: 10px;
+  cursor: pointer;
 }
