@@ -84,10 +84,10 @@ body, html {
   font-size: 18px;
 }
 
-/* Recenter Floating Button */
+/* Recenter Floating Button (sits cleanly above minimized welcome bar) */
 .fab-recenter {
   position: absolute;
-  bottom: 30px;
+  bottom: 85px;
   right: 16px;
   z-index: 9;
   width: 50px;
@@ -125,15 +125,56 @@ body, html {
   height: 5px;
   background: #d1d5db;
   border-radius: 3px;
-  margin: 12px auto 6px;
+  margin: 0 auto;
+}
+
+.sheet-handle-bar {
+  padding: 12px 0 6px;
+  cursor: pointer;
 }
 
 .sheet-content {
-  padding: 16px 22px 28px;
+  padding: 10px 22px 28px;
 }
 
 .sheet-content.scrollable {
   overflow-y: auto;
+}
+
+/* Collapsible Welcome Card */
+.welcome-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.welcome-header-row h1 {
+  margin-bottom: 0;
+  font-size: 19px;
+}
+
+.toggle-chevron {
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: transform 0.25s ease;
+  padding: 4px 8px;
+}
+
+#welcome-collapsible-body {
+  margin-top: 10px;
+}
+
+#welcome-sheet.minimized #welcome-collapsible-body {
+  display: none;
+}
+
+#welcome-sheet.minimized .sheet-content {
+  padding: 6px 20px 14px;
+}
+
+#welcome-sheet.minimized .toggle-chevron {
+  transform: rotate(180deg);
 }
 
 .btn-close {
@@ -154,10 +195,11 @@ h1 { font-size: 21px; margin-bottom: 6px; }
 h2 { font-size: 20px; margin-bottom: 4px; }
 .subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4; }
 .meta-tag { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 12px; }
-.stop-tag { font-size: 12px; font-weight: 700; color: #9ca3af; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
+.stop-tag { font-size: 12px; font-weight: 700; color: #dc2626; letter-spacing: 0.5px; display: block; margin-bottom: 4px; }
 
 .badge-row {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 18px;
 }
@@ -237,7 +279,7 @@ audio {
 .list-container {
   position: absolute;
   top: 70px;
-  bottom: 0;
+  bottom: 64px;
   left: 0;
   right: 0;
   background: #f9fafb;
@@ -268,20 +310,32 @@ audio {
 .list-card p { font-size: 13px; color: var(--text-muted); }
 .list-card .distance { font-size: 12px; font-weight: 700; color: var(--primary); }
 
-/* Custom Marker Styling */
+/* Classic Red Map Teardrop Pin for Mystery Stops */
 .custom-pin {
-  background: var(--primary);
-  color: #fff;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  background: #dc2626;
+  color: #ffffff;
+  border: 2.5px solid #ffffff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.custom-pin span {
+  transform: rotate(45deg);
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1;
+}
+
+/* Turns green once the walker has discovered that stop */
+.custom-pin.discovered {
+  background: #16a34a;
 }
 
 .user-gps-dot {
@@ -444,7 +498,7 @@ audio {
 /* --- Floating Mini Audio Player on Map --- */
 .mini-player {
   position: absolute;
-  bottom: 24px;
+  bottom: 76px;
   left: 16px;
   right: 16px;
   background: #0a4d68;
@@ -559,7 +613,7 @@ audio {
     margin: 0 auto;
     border-radius: var(--radius);
     top: 80px;
-    bottom: 24px;
+    bottom: 90px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
   }
 
