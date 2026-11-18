@@ -5,6 +5,8 @@ let userCoords = null;
 let map, userMarker;
 let markers = [];
 let isTrackingLocation = false;
+let discoveredStops = new Set();
+let trailPolyline = null;
 
 // Center of Houghton-le-Spring
 const HOUGHTON_COORDS = [54.8420, -1.4680];
@@ -14,7 +16,19 @@ document.addEventListener("DOMContentLoaded", () => {
   initMap();
   loadTrailData();
   bindUIEvents();
+  registerServiceWorker();
 });
+
+// Register Service Worker for PWA & offline support
+function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js')
+        .then((reg) => console.log('ServiceWorker registered with scope:', reg.scope))
+        .catch((err) => console.warn('ServiceWorker registration failed:', err));
+    });
+  }
+}
 
 // 1. Initialize Map with Esri World Street Map (100% Free, reliable tiles)
 function initMap() {
@@ -40,15 +54,18 @@ async function loadTrailData() {
   }
 }
 
-// 3. Drop Custom Numbered Pins on Map & Fit All Stops
+// 3. Drop Red Mystery Teardrop Pins & Connect with Dashed Path
 function renderMarkers() {
   markers = [];
+  const latLngs = [];
+
   trailData.forEach((stop, index) => {
+    const isDiscovered = discoveredStops.has(stop.id);
     const customIcon = L.divIcon({
-      className: 'custom-pin',
-      html: `<span>${stop.id}</span>`,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16]
+      className: `custom-pin ${isDiscovered ? 'discovered' : ''}`,
+      html: `<span>${isDiscovered ? '✓' : '?'}</span>`,
+      iconSize: [34, 34],
+      iconAnchor: [17, 34]
     });
 
     const marker = L.marker([stop.coords.lat, stop.coords.lng], { icon: customIcon })
@@ -56,7 +73,21 @@ function renderMarkers() {
       .on('click', () => openStoryDrawer(index));
 
     markers.push(marker);
+    latLngs.push([stop.coords.lat, stop.coords.lng]);
   });
+
+  // Connect all mystery stops with a subtle dashed walking route line
+  if (trailPolyline) {
+    map.removeLayer(trailPolyline);
+  }
+  if (latLngs.length > 1) {
+    trailPolyline = L.polyline(latLngs, {
+      color: '#dc2626',
+      weight: 3,
+      opacity: 0.55,
+      dashArray: '6, 8'
+    }).addTo(map);
+  }
 
   // Fit all pins onto the screen automatically with padding
   if (markers.length > 0) {
@@ -77,13 +108,15 @@ function renderListView() {
   trailData.forEach((stop, index) => {
     const distanceText = userCoords 
       ? `${Math.round(calculateDistance(userCoords.lat, userCoords.lng, stop.coords.lat, stop.coords.lng))}m away`
-      : 'Walking stop';
+      : 'Mystery stop';
+
+    const isDiscovered = discoveredStops.has(stop.id);
 
     const card = document.createElement('div');
     card.className = 'list-card';
     card.innerHTML = `
       <div>
-        <h3>Stop ${stop.id}: ${stop.title}</h3>
+        <h3>${isDiscovered ? '✅' : '📍'} ${stop.title}</h3>
         <p>${stop.era}</p>
       </div>
       <span class="distance">${distanceText} ➔</span>
@@ -104,7 +137,18 @@ function openStoryDrawer(index) {
   // Hide floating mini-bar when full drawer is open
   document.getElementById('mini-audio-bar').classList.add('hidden');
 
-  document.getElementById('story-stop-num').innerText = `STOP ${stop.id} OF ${trailData.length}`;
+  // Mark stop as discovered and turn its map pin green
+  if (!discoveredStops.has(stop.id)) {
+    discoveredStops.add(stop.id);
+    const pinEl = markers[index]?.getElement();
+    if (pinEl) {
+      pinEl.classList.add('discovered');
+      pinEl.innerHTML = '<span>✓</span>';
+    }
+    renderListView();
+  }
+
+  document.getElementById('story-stop-num').innerText = `MYSTERY LOCATION • ${discoveredStops.size} OF ${trailData.length} DISCOVERED`;
   document.getElementById('story-title').innerText = stop.title;
   document.getElementById('story-era').innerText = `${stop.era} • ${stop.category}`;
   document.getElementById('story-description').innerText = stop.description;
@@ -123,10 +167,10 @@ function openStoryDrawer(index) {
   }
 
   const nextBtn = document.getElementById('btn-next-stop');
-  if (index === trailData.length - 1) {
+  if (discoveredStops.size === trailData.length && index === trailData.length - 1) {
     nextBtn.innerText = "Complete Trail 🎉";
   } else {
-    nextBtn.innerText = "Next Stop ➔";
+    nextBtn.innerText = "Next Mystery Stop ➔";
   }
 
   map.panTo([stop.coords.lat, stop.coords.lng]);
@@ -186,7 +230,6 @@ function openLightbox(url) {
   img.classList.remove('zoomed');
   modal.classList.remove('hidden');
 
-  // Tap or click photo to zoom in/out
   img.onclick = (e) => {
     e.stopPropagation();
     img.classList.toggle('zoomed');
@@ -197,7 +240,7 @@ function closeLightbox() {
   document.getElementById('image-lightbox').classList.add('hidden');
 }
 
-// Updated closeStoryDrawer: Keeps audio playing in a floating mini-player
+// Keeps audio playing in a floating mini-player when drawer closes
 function closeStoryDrawer() {
   const audioEl = document.getElementById('story-audio');
   const miniBar = document.getElementById('mini-audio-bar');
@@ -255,20 +298,30 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
 
 // 7. Bind Interactive Events
 function bindUIEvents() {
-  // Start button triggers geolocation
+  // Toggle minimize/expand on the Welcome Card handle or header
+  const toggleWelcomeCard = () => {
+    const sheet = document.getElementById('welcome-sheet');
+    sheet.classList.remove('hidden');
+    sheet.classList.toggle('minimized');
+  };
+
+  document.getElementById('welcome-handle').addEventListener('click', toggleWelcomeCard);
+  document.getElementById('welcome-header-toggle').addEventListener('click', toggleWelcomeCard);
+
+  // Start button minimizes the card into the slim bottom bar & triggers geolocation
   document.getElementById('btn-start-trail').addEventListener('click', () => {
-    document.getElementById('welcome-sheet').classList.add('hidden');
+    document.getElementById('welcome-sheet').classList.add('minimized');
     startLocationTracking();
   });
 
   document.getElementById('btn-close-drawer').addEventListener('click', closeStoryDrawer);
 
   document.getElementById('btn-next-stop').addEventListener('click', () => {
-    if (currentStopIndex === trailData.length - 1) {
+    if (discoveredStops.size === trailData.length && currentStopIndex === trailData.length - 1) {
       closeStoryDrawer();
       document.getElementById('completion-modal').classList.remove('hidden');
     } else {
-      openStoryDrawer(currentStopIndex + 1);
+      openStoryDrawer((currentStopIndex + 1) % trailData.length);
     }
   });
 
@@ -322,7 +375,10 @@ function bindUIEvents() {
   // Restart modal button
   document.getElementById('btn-restart').addEventListener('click', () => {
     document.getElementById('completion-modal').classList.add('hidden');
-    map.setView(HOUGHTON_COORDS, 16);
+    if (markers.length > 0) {
+      const group = L.featureGroup(markers);
+      map.fitBounds(group.getBounds(), { padding: [50, 50], maxZoom: 16 });
+    }
   });
 
   // Map & List toggles
@@ -336,14 +392,16 @@ function bindUIEvents() {
     }
     if (userCoords) {
       map.setView([userCoords.lat, userCoords.lng], 17);
-    } else {
-      map.setView(HOUGHTON_COORDS, 16);
+    } else if (markers.length > 0) {
+      const group = L.featureGroup(markers);
+      map.fitBounds(group.getBounds(), { padding: [50, 50], maxZoom: 16 });
     }
   });
 
-  // Info modal opener
+  // Info button expands the welcome card back open
   document.getElementById('btn-info').addEventListener('click', () => {
-    document.getElementById('welcome-sheet').classList.remove('hidden');
+    const sheet = document.getElementById('welcome-sheet');
+    sheet.classList.remove('hidden', 'minimized');
   });
 }
 
